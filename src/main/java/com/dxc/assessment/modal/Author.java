@@ -21,6 +21,14 @@ public class Author {
         this.genre = genre;
         this.email = email;
     }
+    
+
+    public Author(String firstName, String lastName, String genre, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.genre = genre;
+        this.email = email;
+    }
 
     public int getId() {
         return id;
