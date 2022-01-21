@@ -16,44 +16,6 @@ public class App
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
-        findAllAuthor();
-    }
-    static void findAllAuthor(){
-        
-        AuthorDao dao = new AuthorDao(); 
-
-            
-        try {
-            List<Author> author= dao.findAll();
-            if (author.size() == 0) {
-                System.out.println("No author found");
-                return;
-            }
-            author.forEach(au -> System.out.println(au));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println(e.getMessage());
-        }
-    }
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    static void createAuthor() {
         Author swetha = new Author("swetha", "shetty", "11th","swe@gmail.com");
         Author rahul = new  Author("rahul", "muppirishetty", "4th","rahul@gmail.com");
         Author sai = new  Author("sai", "reddy", "10th","sai@gmail.com");
@@ -71,5 +33,7 @@ public class App
                 System.err.println(e.getMessage());
             }
         });
+        
     }
+    
 }
