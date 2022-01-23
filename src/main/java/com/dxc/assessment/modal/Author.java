@@ -76,5 +76,17 @@ public class Author {
                 firstName, genre, id, lastName);
     }
 
+    public void forEach(Object object) {
+    }
+
+    public void forEach(Object object) {
+    }
+
+    public void forEach(Object object) {
+    }
+
+    public void forEach(Object object) {
+    }
+
 
 }

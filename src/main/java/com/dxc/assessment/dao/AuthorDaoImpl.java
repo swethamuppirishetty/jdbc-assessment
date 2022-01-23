@@ -1,5 +1,6 @@
 package com.dxc.assessment.dao;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,11 +20,17 @@ public class AuthorDaoImpl implements AuthorDao{
     private static final String USER_NAME;
     private static final String PASSWORD;
     private static final String URL;
+    private static final String SELECT_BY_ID;
+    private static final String SELECT_BY_GENRE;
+
+
 
 
     static{
         INSERT_ONE_AUTHOR= " INSERT INTO author(firstName,lastname,genre,email) VALUES (?,?,?,?,?)";
         SELECT_ALL_AUTHOR=" SELECT * FROM author";
+        SELECT_BY_ID = "Select * from author where id = 1" ;
+        SELECT_BY_GENRE = "select * from author where genre=10th ";
 
         USER_NAME="root";
         PASSWORD="password";
@@ -75,15 +82,46 @@ public class AuthorDaoImpl implements AuthorDao{
     
 
     @Override
-    public Author findById(Long id) {
+    public ArrayList findById(Long id) throws SQLException {
+        ArrayList author = null;
+        Connection connection= DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+        Statement st = connection.createStatement();
+        ResultSet rs=st.executeQuery( SELECT_BY_ID );
 
-        return null;
+        author = new ArrayList();
+        while (rs.next()) {
+            author.add(new Author(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getString(5)));
+        }
+     
+
+        rs.close();
+        st.close();
+        connection.close();
+        return author;
+        
     }
 
     @Override
-    public List<Author> findByGenre(String genre) {
-        return null;
+    public List<Author> findByGenre(String genre) throws SQLException {
+        
+        ArrayList author = null;
+        Connection connection= DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+        Statement st = connection.createStatement();
+        ResultSet rs=st.executeQuery( SELECT_BY_GENRE );
+
+        author = new ArrayList();
+        while (rs.next()) {
+            author.add(new Author(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getString(5)));
+        }
+     
+
+        rs.close();
+        st.close();
+        connection.close();
+        return author;
     }
+
+
 
     @Override
     public List<Author> findAll() throws SQLException{

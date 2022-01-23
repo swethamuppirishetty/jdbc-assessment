@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.dxc.assessment.dao.AuthorDao;
+import com.dxc.assessment.dao.AuthorDaoImpl;
 import com.dxc.assessment.modal.Author;
 
 /**
@@ -13,7 +14,7 @@ import com.dxc.assessment.modal.Author;
  */
 public class App 
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws SQLException
     {
         System.out.println( "Hello World!" );
         Author swetha = new Author("swetha", "shetty", "11th","swe@gmail.com");
@@ -21,19 +22,18 @@ public class App
         Author sai = new  Author("sai", "reddy", "10th","sai@gmail.com");
         
 
-        List<Author> author = List.of(swetha,rahul,sai);
-        AuthorDao authorDao = new AuthorDao();
+         Author author = (Author) List.of(swetha,rahul,sai);
+        AuthorDaoImpl authorDao = new AuthorDaoImpl();
+        authorDao.create(author);
+        System.out.println(authorDao.create(author));
 
-        author.forEach(au-> {
-            try {
-                Author rows = authorDao.create(au);
-                System.out.println("Rows affected: " + rows);
-            } catch (SQLDataException e) {
-                e.printStackTrace();
-                System.err.println(e.getMessage());
-            }
-        });
+
+      
+        
+        
         
     }
+
+    
     
 }
