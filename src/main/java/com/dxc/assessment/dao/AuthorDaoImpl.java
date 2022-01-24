@@ -26,11 +26,12 @@ public class AuthorDaoImpl implements AuthorDao{
 
 
 
+
     static{
-        INSERT_ONE_AUTHOR= " INSERT INTO author(firstName,lastname,genre,email) VALUES (?,?,?,?,?)";
+        INSERT_ONE_AUTHOR= " INSERT INTO author(firstName,lastname,genre,email) VALUES (?,?,?,?)";
         SELECT_ALL_AUTHOR=" SELECT * FROM author";
-        SELECT_BY_ID = "Select * from author where id = 1" ;
-        SELECT_BY_GENRE = "select * from author where genre=10th ";
+        SELECT_BY_ID = "Select * from author where id = ? ";
+        SELECT_BY_GENRE = "select * from author where genre=? ";
 
         USER_NAME="root";
         PASSWORD="password";
@@ -41,39 +42,22 @@ public class AuthorDaoImpl implements AuthorDao{
 
 
 
-
-
-
-
-
-
     @Override
-    public Author create(Author author) throws SQLException {
-        System.out.println("saving author: "+author);
-
-        //get a connection using drivermanager
-        Connection connection= DriverManager.getConnection(URL, USER_NAME, PASSWORD);
-        PreparedStatement ps=connection.prepareStatement(INSERT_ONE_AUTHOR);
-
-        ps.setString(1, author.getFirstName());
-        
-        ps.setString(2, author.getLastName());
-        ps.setString(3, author.getGenre());
-        ps.setString(4, author.getEmail());
-        
-    
-        
-
-        ps.close();
-        connection.close();
-        return author;
-
-    
-
-
-
+    public void create(Author author) throws SQLException {
+        // TODO Auto-generated method stub
+        System.out.println( INSERT_ONE_AUTHOR);
+        // try-with-resource statement will auto close the connection.
+        try (Connection connection = DriverManager.getConnection(URL,USER_NAME,PASSWORD); PreparedStatement preparedStatement = connection.prepareStatement( INSERT_ONE_AUTHOR)) {
+            preparedStatement.setString(1, author.getFirstName());
+            preparedStatement.setString(2,author.getLastName());
+            preparedStatement.setString(3, author.getGenre());
+            preparedStatement.setString(4, author.getEmail());
+            System.out.println(preparedStatement);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
-
 
 
 
@@ -81,63 +65,125 @@ public class AuthorDaoImpl implements AuthorDao{
 
     
 
-    @Override
-    public ArrayList findById(Long id) throws SQLException {
-        ArrayList author = null;
-        Connection connection= DriverManager.getConnection(URL, USER_NAME, PASSWORD);
-        Statement st = connection.createStatement();
-        ResultSet rs=st.executeQuery( SELECT_BY_ID );
 
-        author = new ArrayList();
-        while (rs.next()) {
-            author.add(new Author(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getString(5)));
-        }
-     
 
-        rs.close();
-        st.close();
-        connection.close();
-        return author;
-        
-    }
 
-    @Override
-    public List<Author> findByGenre(String genre) throws SQLException {
-        
-        ArrayList author = null;
-        Connection connection= DriverManager.getConnection(URL, USER_NAME, PASSWORD);
-        Statement st = connection.createStatement();
-        ResultSet rs=st.executeQuery( SELECT_BY_GENRE );
 
-        author = new ArrayList();
-        while (rs.next()) {
-            author.add(new Author(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getString(5)));
-        }
-     
 
-        rs.close();
-        st.close();
-        connection.close();
-        return author;
-    }
+
+
+
+
+
+
 
 
 
     @Override
-    public List<Author> findAll() throws SQLException{
-        List<Author> author = null;
-        Connection connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(SELECT_ALL_AUTHOR);
-        author = new ArrayList();
-        while (rs.next()) {
-            author.add(new Author(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getString(5)));
+    public List<Author> findAll() throws SQLException {
+
+        List < Author > author = new ArrayList < > ();
+        // Step 1: Establishing a Connection
+        try (Connection connection = DriverManager.getConnection(URL,USER_NAME,PASSWORD);
+
+            // Step 2:Create a statement using connection object
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_AUTHOR)) {
+            System.out.println(preparedStatement);
+            // Step 3: Execute the query or update query
+            ResultSet rs = preparedStatement.executeQuery();
+
+            // Step 4: Process the ResultSet object.
+            while (rs.next()) {
+                int id =rs.getInt("id");
+                String firstname = rs.getString("firstName");
+                String lastname = rs.getString("lastname");
+                String genre = rs.getString("genre");
+            
+                String email = rs.getString("email");
+                author.add(new Author(id, firstname,lastname,genre, email));
+            }
+        } catch (SQLException e) {
+            System.err.println(e);
         }
-        rs.close();
-        statement.close();
-        connection.close();
         return author;
-        
     }
         
+
+
+
+
+
+    @Override
+    public Author findByGenre(String genre) throws SQLException {
+
+        Author author= null;
+        
+        // Step 1: Establishing a Connection
+        try (Connection connection =DriverManager.getConnection(URL,USER_NAME,PASSWORD);
+            // Step 2:Create a statement using connection object
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_GENRE);) {
+            preparedStatement.setString(1, genre);
+            System.out.println(preparedStatement);
+            // Step 3: Execute the query or update query
+            ResultSet rs = preparedStatement.executeQuery();
+
+            // Step 4: Process the ResultSet object.
+            while (rs.next()) {
+                int id =rs.getInt("id");
+                String firstname = rs.getString("firstName");
+                String lastname = rs.getString("lastname");
+            
+                String email = rs.getString("email");
+                author = new Author(id,firstname, lastname, genre,email);
+            }
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+        return author;
+    
+    }
+
+
+
+
+
+    @Override
+    public Author findById(int id) throws SQLException {
+        Author author= null;
+        
+        // Step 1: Establishing a Connection
+        try (Connection connection =DriverManager.getConnection(URL,USER_NAME,PASSWORD);
+            // Step 2:Create a statement using connection object
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID);) {
+            preparedStatement.setInt(1, id);
+            System.out.println(preparedStatement);
+            // Step 3: Execute the query or update query
+            ResultSet rs = preparedStatement.executeQuery();
+
+            // Step 4: Process the ResultSet object.
+            while (rs.next()) {
+                String firstname = rs.getString("firstName");
+                String lastname = rs.getString("lastname");
+                String genre = rs.getString("genre");
+                String email = rs.getString("email");
+                author = new Author(id,firstname, lastname, genre,email);
+            }
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+        return author;
+        
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

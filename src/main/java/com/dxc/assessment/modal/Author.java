@@ -2,7 +2,7 @@ package com.dxc.assessment.modal;
 
 public class Author {
 
-    private int id;
+    private int id  ;
 
     private String firstName;
 
@@ -14,6 +14,9 @@ public class Author {
 
     public Author() {}
 
+    
+    
+
     public Author(int id, String firstName, String lastName, String genre, String email) {
         this.id = id;
         this.firstName = firstName;
@@ -21,7 +24,9 @@ public class Author {
         this.genre = genre;
         this.email = email;
     }
-    
+
+
+
 
     public Author(String firstName, String lastName, String genre, String email) {
         this.firstName = firstName;
@@ -75,18 +80,4 @@ public class Author {
         return String.format("Author [email=%s, firstName=%s, genre=%s, id=%s, lastName=%s]", email,
                 firstName, genre, id, lastName);
     }
-
-    public void forEach(Object object) {
-    }
-
-    public void forEach(Object object) {
-    }
-
-    public void forEach(Object object) {
-    }
-
-    public void forEach(Object object) {
-    }
-
-
 }
